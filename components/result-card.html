@@ -1,0 +1,144 @@
+<style>
+    /* Result card */
+    .card {
+        /* Positioning */
+        position: relative;
+        width: 70%;
+        text-align: center;
+        margin: auto;
+
+        margin-top: 25px;
+
+        /* Card styling */
+        background-color: rgba(73, 73, 73, 0.377);
+        outline: rgb(218, 218, 218) solid 2px;
+        border-radius: 5px;
+    }
+
+    /* Make it look clickable */
+    .card:hover {
+        cursor: pointer;
+    }
+
+    /* For the first card to show up beneath the search bar */
+    .seperator {
+        margin-top: 22vh;
+    }
+
+    /* Cover image */
+    .img {
+        /* Positioning */
+        z-index: 15;
+        width: 25%;
+
+        z-index: 4;
+        position: absolute;
+        margin-top: 20px;
+        margin-left: 5%;
+
+        /* Appearance */
+        border-radius: 3px;
+        -webkit-transition: 1s;
+        transition: 1s;
+        transform: 
+         perspective(75em)
+         rotateY(25deg);
+
+         -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 20%,rgba(0,0,0,1) 100%);
+         mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 20%,rgba(0,0,0,1) 100%);
+    }
+
+    /* Cover rotation animation */
+    .img:hover {
+        transform: rotateY(0deg);
+        transition: 1s;
+        -webkit-transition: 1s;
+
+        -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%,rgba(0,0,0,1) 100%);
+         mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%,rgba(0,0,0,1) 100%);
+    }
+</style>
+
+<script type="module">
+    import { AddBook, ParseData } from './index.js';
+
+    // Cache references to elements
+    let card{i} = document.getElementById('card{i}').onclick = OpenBox{i}; // Same as below
+    let bkmark{i} = document.getElementById('bkmark{i}');
+
+    // Detect clicks outside of modal and close it
+    window.addEventListener('click', function(e){   
+        if (e.target == document.getElementById('popupBox{i}')) document.getElementById('popupBox{i}').style.display = 'none';
+    });
+
+    // Set the cover to a fallback image if it's not valid, otherwise set the correct image source
+    if ({coverId} == undefined) document.getElementById('img{i}').src = 'https://community.powerbi.com/t5/image/serverpage/image-id/49534iAC45D8DA848E54D2/image-size/large?v=v2&px=999.png'; // Fallback img
+    else document.getElementById('img{i}').src = 'https://covers.openlibrary.org/b/id/{coverId}-M.jpg'; // Normal image
+
+    // Function for opening the modal
+    async function OpenBox{i} () // Ignore errors here - this will get replaced
+    {
+        // Get a reference to the card's description elm
+        let cardDesc{i} = document.getElementById('cardDesc{i}');
+        // Fetch description, set it and show the popupbox
+        fetch(`https://openlibrary.org{key}.json`).then(response => response.json()).then(data => cardDesc{i}.innerHTML = ParseData(data.description));
+        document.getElementById('popupBox{i}').style.display = 'block';
+    }
+
+    // Bookmark button functionality
+    bkmark{i}.onclick = () => {
+        let key = "{key}";
+
+        AddBook({
+            work: key, cover: "{coverId}", name: `{heading}`, desc: "{description}",
+            year: "{year}", pages: "{pages}", ebook: "{ebook}", hardcover: "{hardcover}",
+            langs: "{langs}", goodreads: "{goodreads}", goodreadsAvailiable: "{goodreadsAvailiable}",
+            author: "{author}"
+        });
+    }
+
+</script>
+
+<!-- Only have the extra space IF this is the first card... Conditional rendering via if statements in HTML elements is a feature of Simple-Comps! :) -->
+<div if="{firstCard}" class="seperator"></div>
+
+<!-- Result-card defenition -->
+<div class="card" id="card{i}">
+    <div>
+        <h1>{heading}</h1>
+        <p>{description}</p>
+    </div>
+</div>
+
+<!-- Popup Box/Modal -->
+<div id="popupBox{i}" class="modal-background" style="display: none;">
+    <div class="popupBox">
+        <!-- Bookmark button, cover image, title and description, in that order -->
+        <div id="bkmark{i}" class="bookmarkButton"><img width="20" class="bkmark-center" src="https://cdn.pixabay.com/photo/2013/03/29/13/38/bookmark-97575_1280.png"></div>
+        <div>
+            <p style="position: absolute; bottom: 20px; color: black; margin-left: 5%;">
+                <a target="_blank" href="https://openlibrary.org{key}">Read Now</a>
+                <span if="{goodreadsAvailiable}"> <!-- SimpleComps conditional rendering! -->
+                    or 
+                    <a target="_blank" href="https://www.goodreads.com/book/show/{goodreads}">View on GoodReads.</a>
+                </span>
+            </p>
+            <img id="img{i}" class="img" style="height: auto;" src="https://covers.openlibrary.org/b/id/{coverId}-M.jpg" />
+        </div>
+        <h1 style="margin-left: 35%; margin-right: 5%;">{heading}</h1>
+        <p style="color: black; margin-left: 35%; margin-right: 5%;">
+            <strong>Availability: </strong> <br />
+            EBooks available: {ebook} <br />
+            Hardcover editions available: {hardcover}
+            <br />
+            </p>
+        <p style="position: relative; margin-top: -70px; color: black; margin-right: 5%; text-align: right;">
+            <strong>Information: </strong> <br />
+            Authors: {author} <br />
+            Publish Date: {year} <br />
+            Pages: {pages} <br />
+            Languages: {langs}
+        </p>
+        <p style="color: black; margin-left: 35%; margin-right: 5%;" id="cardDesc{i}">{placeholderDesc}</p>
+    </div>
+</div>

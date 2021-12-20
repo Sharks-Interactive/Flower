@@ -1,0 +1,44 @@
+<style>
+    .spinner {
+        /* Apperance */
+        border-radius: 100px;
+        outline: rgba(97, 241, 252, 0.534) solid 5px;
+        background-color: rgba(203, 253, 255, 0.658);
+
+        /* Positioning */
+        position: absolute;
+        width: 58px;
+        aspect-ratio: 1;
+        margin: auto;
+        left: calc(50% - 29px);
+        top: 35vh;
+
+        /* Animation */
+        animation: 1s linear 0s infinite forwards loading;
+    }
+
+    /* Animation defenition */
+    @keyframes loading {
+        0% {
+            background-color: rgba(58, 58, 58, 0.658);
+            transform: scale(1);
+        }
+
+        75% {
+            background-color: rgba(203, 253, 255, 0.658);
+            transform: scale(1);
+        }
+
+        87.5% {
+            background-color: rgb(194, 194, 194);
+            transform: scale(1.1);
+        }
+
+        100% {
+            bbackground-color: rgba(203, 253, 255, 0.658);
+            transform: scale(1);
+        }
+    }
+</style>
+
+<div class="spinner"></div>

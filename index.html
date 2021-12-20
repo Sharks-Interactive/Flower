@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>
+        Library App
+    </title>
+
+    <!-- Link in other files -->
+    <link rel="stylesheet" href="site.css">
+    <script type="module" src="index.js"></script>
+</head>
+
+<body class="bg">
+    <!-- Background image -->
+    <div class="bg-fill unloaded"></div>
+    <img class="bg-fill" id='js-bg-img'>
+
+    <!-- Nav bar -->
+    <h1 style="text-align: left;" class="nav-bar">
+        <span style="font-family: Brush Script MT, Brush Script Std, cursive">
+            🌷Flower - The Library App
+        </span>
+        <div class="nav-bar" style="position: fixed; text-align: right;">
+            <a class="nav-bar nav-item fixed-right-15px" href="#">🔎Find a book</a>
+            <a class="nav-bar nav-item" href="#mybooks">📚My books</a>
+        </div>
+    </h1>
+
+    <!-- Page One -->
+    <div id="js-pg-1" style="display: block; height: 100%; width: 100%; overflow: hidden;">
+        <!-- Search bar -->
+        <search-bar></search-bar>
+
+        <loader id="js-loader" style="display: none"></loader>
+
+        <div class="results-cont" id="js-results-container"></div>
+    </div>
+
+    <!-- Page Two -->
+    <div id="js-pg-2" style="display: none; height: 100%; width: 100%; overflow: hidden;">
+        <div class="bookCont" id="js-books-container"></div>
+    </div>
+
+    <p class="about-text">Sources <a href="https://openlibrary.org" target="_blank">openlibrary</a> Design and
+        implementation Owen Silva 2021.</p>
+</body>
+
+</html>

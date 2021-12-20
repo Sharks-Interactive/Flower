@@ -1,0 +1,152 @@
+<style>
+    .my-card {
+        /* Positioning */
+        position: relative;
+        width: 75%;
+        text-align: center;
+        max-height: 70%;
+
+        margin-top: 25px;
+
+        /* Card styling */
+        background-color: rgba(73, 73, 73, 0.44);
+        padding: 5px 5px;
+        border-radius: 5px;
+    }
+
+    /* MY book cover image */
+    .my-img {
+        z-index: 15;
+        width: 100%; /* Use all of the parent containers space */
+
+        /* Positioning */
+        z-index: 4;
+        position: relative;
+
+        /* Appearance */
+        border-radius: 3px;
+        -webkit-transition: 1s;
+        transition: 1s;
+        transform: 
+         perspective(75em)
+         rotateY(25deg);
+
+         -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 20%,rgba(0,0,0,1) 100%);
+         mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 20%,rgba(0,0,0,1) 100%);
+    }
+
+    /* Animations */
+    .my-img:hover {
+        transform: rotateY(0deg);
+        transition: 1s;
+        -webkit-transition: 1s;
+        /* Make it 'look' clickable */
+        cursor: pointer;
+
+        -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%,rgba(0,0,0,1) 100%);
+         mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%,rgba(0,0,0,1) 100%);
+    }
+
+    /* Image for inside the modal */
+    .card-img {
+        /* Positioning/Sizing */
+        z-index: 15;
+        width: 25%;
+
+        z-index: 4;
+        position: absolute;
+        margin-top: 20px;
+
+        /* Appearance */
+        border-radius: 3px;
+        -webkit-transition: 1s;
+        left: 5%;
+        transition: 1s;
+        text-align: left !important;
+        transform: 
+        perspective(75em)
+        rotateY(25deg);
+
+        -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 20%,rgba(0,0,0,1) 100%);
+        mask-image: linear-gradient(to left, rgba(0,0,0,0.6) 20%,rgba(0,0,0,1) 100%);
+    }
+
+    /* Cover rotation animation */
+    .card-img:hover {
+        transform: rotateY(0deg);
+        transition: 1s;
+        -webkit-transition: 1s;
+
+        -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%,rgba(0,0,0,1) 100%);
+        mask-image: linear-gradient(to left, rgba(0,0,0,1) 20%,rgba(0,0,0,1) 100%);
+    }
+</style>
+
+<script type="module">
+    import { RemoveBook, ParseData } from './index.js';
+
+    // Register event handlers and store a reference to the card's desc elm
+    const myCardDesc{i} = document.getElementById('my-cardDesc{i}');
+    document.getElementById('my-card{i}').onclick = myOpenBox{i};
+
+    // Replace cover image with a fallback image if it's not valid
+    if ({coverId} == undefined) document.getElementById('my-img{i}').src = 'https://community.powerbi.com/t5/image/serverpage/image-id/49534iAC45D8DA848E54D2/image-size/large?v=v2&px=999.png'; // Fallback img
+
+    // Close popup modal when you click out of it
+    window.addEventListener('click', function(e){   
+        if (e.target == document.getElementById('my-popupBox{i}')) document.getElementById('my-popupBox{i}').style.display = 'none';
+    });
+
+    // Fetch description and open popupbox
+    async function myOpenBox{i} () // Ignore errors here - this will get replaced
+    {
+        fetch(`https://openlibrary.org{key}.json`).then(response => response.json()).then(data => myCardDesc{i}.innerHTML = ParseData(data.description));
+        document.getElementById('my-popupBox{i}').style.display = 'block';
+    }
+
+    // Unbookmark
+    document.getElementById('my-bkmark{i}').onclick = () => {
+        let key = "{key}";
+
+        RemoveBook(key); 
+        window.location.reload();     
+    }
+
+</script>
+
+<!-- Cover-frame -->
+<div style="background-color: #24292f;" id="my-card{i}">
+    <img id="my-img{i}" class="my-img" style="height: auto;" src="https://covers.openlibrary.org/b/id/{coverId}-M.jpg" />
+</div>
+<!-- Popup Box/Modal -->
+<div id="my-popupBox{i}" class="modal-background" style="display: none;">
+    <div class="popupBox">
+        <!-- Bookmark button, book cover, title and description -->
+        <div id="my-bkmark{i}" class="bookmarkButton"><img width="20" class="bkmark-center" src="https://cdn.pixabay.com/photo/2013/03/29/13/38/bookmark-97575_1280.png"></div>
+        <div>
+            <p style="position: absolute; bottom: 20px; color: black; margin-left: 5%;">
+                <a target="_blank" href="https://openlibrary.org{key}">Read Now</a>
+                <span if="{goodreadsAvailiable}"> <!-- SimpleComps conditional rendering! -->
+                    or 
+                    <a target="_blank" href="https://www.goodreads.com/book/show/{goodreads}">View on GoodReads.</a>
+                </span>
+            </p>
+            <img id="img{i}" class="card-img" style="height: auto;" src="https://covers.openlibrary.org/b/id/{coverId}-M.jpg" />
+        </div>
+        <h1 style="margin-left: 35%; margin-right: 5%;">{heading}</h1>
+        <p style="color: black; margin-left: 35%; margin-right: 5%; text-align: left;">
+            <strong>Availability: </strong> <br />
+            EBooks available: {ebook} <br />
+            Hardcover editions available: {hardcover}
+            <br />
+            </p>
+        <p style="position: relative; margin-top: -70px; color: black; margin-right: 5%; text-align: right;">
+            <strong>Information: </strong> <br />
+            Authors: {author} <br />
+            Publish Date: {year} <br />
+            Pages: {pages} <br />
+            Languages: {langs}
+        </p>
+        <p style="color: black; margin-left: 35%; margin-right: 5%;" id="my-cardDesc{i}">{placeholderDesc}</p>
+    </div>
+</div>
